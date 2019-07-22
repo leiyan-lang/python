@@ -41,7 +41,7 @@ def auto_reply(msg):
 if __name__ == '__main__':
     
     jinshanapi = 'http://open.iciba.com/dsapi'
-    #itchat.auto_login(hotReload=True)
+    itchat.auto_login(hotReload=True)
     
     sentence = get_sentence(jinshanapi)
     content = sentence['content'] #获取的英语句子
