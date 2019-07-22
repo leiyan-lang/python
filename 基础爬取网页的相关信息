@@ -1,0 +1,60 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul 19 16:02:06 2019
+
+@author: air
+"""
+
+import json
+import requests
+from lxml import etree
+
+
+def getonePage(n):
+    
+    url = f'https://maoyan.com/board/6?offset={n*10}'
+
+    #告诉服务器我们是浏览器（以字典的格式运行）
+    header = {'User-Agent':'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
+
+    r = requests.get(url,headers=header)
+    #r = requests.get(url)
+
+    return r.text
+
+def parse(text):
+    #初始化，标准化
+    html = etree.HTML(text)
+    #提取我们需要的信息 需要写xpath语法
+    #names是列表 XPath返回的一定是列表
+    names = html.xpath('//dl[@class="board-wrapper"]/dd/a/@title')
+    releasetimes = html.xpath('//div[@class="movie-item-info"]/p[@class="releasetime"]/text()')
+    item = {}
+    #zip函数是拉链函数
+    for name,releasetime in zip(names,releasetimes):
+
+        
+        item['name'] = name
+        item['releasetime'] = releasetime
+        
+        #生成器而不是普通的函数，可以循环迭代。
+        yield item
+
+#保存数据
+def save2File(data):
+    with open('movie.json','a',encoding='utf-8') as f:
+        #json将 字典 列表 转换成字符串
+        data = json.dumps(data,ensure_ascii=False) + ',\n'
+        f.write(data)
+    
+def run():
+    for n in range(0,4):
+        text = getonePage(n)
+
+        items = parse(text)
+
+        for item in items:
+            save2File(item)
+            
+if __name__ == '__main__':
+    run()
