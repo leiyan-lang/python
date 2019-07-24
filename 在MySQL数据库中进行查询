@@ -1,0 +1,48 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jul 24 17:23:16 2019
+
+@author: leiyang
+"""
+
+import pymysql.cursors
+
+#连接数据库
+connection = pymysql.connect(
+        host='localhost',
+        user='root',
+        passwd='111111',
+        db='test',
+        port=3306,
+        charset='utf8')
+
+#创建一个游标
+cursor = connection.cursor()
+
+
+#查询数据(现在已经进入了名为mysql的数据库之中)，返回结果默认以元组的形式
+sql = "select * from maoyan_movie"
+cursor.execute(sql)
+
+"""
+
+#由于上面的sql语句操作返回的结果是以元组的形式，所以可以进行迭代查询
+for i in cursor.fetchall():
+    print(i)
+    print('共查询到：',cursor.rowcount,'条数据。')
+    
+    
+#获取第一行的数据
+result_1 = cursor.fetchone()
+print(result_1)
+
+"""
+#获取前n行的数据
+result_1 = cursor.fetchone()
+print(result_1)
+
+
+
+
+cursor.close()  #关闭游标
+connection.close()  #关闭链接
