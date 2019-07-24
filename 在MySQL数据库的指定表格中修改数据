@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jul 24 20:58:36 2019
+
+@author: leiyang
+"""
+
+import pymysql.cursors
+
+#链接数据库
+connection = pymysql.connect(
+        host='localhost',
+        user='root',
+        passwd='111111',
+        db='test',
+        port=3306,
+        charset='utf8')
+
+#创建一个游标
+cursor = connection.cursor()
+
+#执行sql语句进行相关数据的修改
+sql = "update maoyan_movie set movie=%s where ranking=%s"
+data = ('返老还童',101)
+cursor.execute(sql,data)
+"""
+sql = "update maoyan_movie set movie='%s' where ranking=%s"
+data = ('寂静之地',1)
+cursor.execute(sql % data)
+#注意两种执行语句的格式
+
+"""
+
+connection.commit()   #注意最后将命令进行提交
+cursor.close()
+connection.close()
